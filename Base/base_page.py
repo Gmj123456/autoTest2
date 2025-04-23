@@ -35,3 +35,9 @@ class BasePage:
     # 获取属性
     def get_attribute(self,loc,attribute):
         return self.locator(*loc).get_attribute(attribute)
+
+    
+    def save_element_screenshot(self, locator, file_path):
+        """通用元素截图方法"""
+        element = self.locator(*locator)
+        element.screenshot(file_path)
