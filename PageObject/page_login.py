@@ -2,10 +2,10 @@ from Base.base_page import BasePage
 
 class PageLogin(BasePage):
     # 定位器
-    username_input = ("id", "username")
-    password_input = ("id", "password")
-    code_input = ("id", "code")
-    login_button = ("id", "loginBtn")
+    username_input = ("css selector", "input[placeholder='请输入用户名']")
+    password_input = ("css selector", "input[placeholder='请输入密码']")
+    code_input = ("css selector", "input[placeholder='请输入验证码']")
+    login_button = ("css selector", "button.login-button")
 
     # 输入用户名
     def input_username(self, username):

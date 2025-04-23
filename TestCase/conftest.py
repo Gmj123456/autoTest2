@@ -6,7 +6,7 @@
 
 """
 from selenium import webdriver
-from config.conf import CHROME_DRIVER_PATH
+from Base.config import CHROME_DRIVER_PATH
 from selenium.webdriver.chrome.service import Service
 
 service = Service(CHROME_DRIVER_PATH)  # 指定浏览器驱动的路径
