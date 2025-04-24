@@ -43,27 +43,34 @@ class LoginPage(BasePage):
 
     def save_captcha_image(self):
         """保存验证码图片"""
-        current_dir = Path(__file__).parent.resolve()  # 修改 pathlib.Path → Path
+        current_dir = Path(__file__).parent.resolve()
         config_dir = current_dir.parent / 'Base'/'utils'
         config_dir.mkdir(parents=True, exist_ok=True)
         captcha_path = config_dir / 'captcha.png'
 
         try:
-            captcha_image = self.find_element(*self.CAPTCHA_IMAGE)
-            captcha_image.screenshot(str(captcha_path))
+            # captcha_image = self.locator(*self.code_image)
+            # captcha_image.screenshot(str(captcha_path))
+            # 修正参数格式（原错误参数：str(*self.code_image,captcha_path））
+            self.save_element_screenshot(self.code_image, str(captcha_path))
             logging.info(f"验证码图片已保存到 {captcha_path}")
             return captcha_path
         except NoSuchElementException:
             logging.error("未找到验证码图片元素")
         except WebDriverException as e:
             logging.error(f"截图验证码时出现 WebDriver 异常: {e}")
-        return None
+        try:
+            if not captcha_path.parent.exists():
+                captcha_path.parent.mkdir(parents=True)
+        except Exception as e:
+            logging.error(f"路径创建失败: {str(captcha_path)}，错误: {e}")
+            return None
 
     def recognize_captcha(self, captcha_path):
         """调用 OCR 接口识别验证码"""
         if not captcha_path:
             return None
-        current_dir = Path(__file__).parent.resolve()  # 修改 pathlib.Path → Path
+        current_dir = Path(__file__).parent.resolve()
         ocr_script_path = current_dir.parent / 'Base'/'utils' / 'ocr.py'
         try:
             # 检查 OCR 脚本文件是否存在
@@ -165,16 +172,15 @@ class LoginPage(BasePage):
 
                 captcha_path = self.save_captcha_image()
                 captcha_text = self.recognize_captcha(captcha_path)
-
-                print(captcha_text)
-
+                
                 if captcha_text:
                     self.input_code(captcha_text + Keys.RETURN)
                     logging.info(f"已输入验证码: {captcha_text}，第 {attempts + 1} 次尝试")
                     result = self.check_login_result(attempts)
-                    # if result:
-                    #     self.access_token_ptuser = self.get_access_token_ptuser()  # 获取token
-                    #     return True
+                    if result:
+                        self.access_token_ptuser = self.get_access_token_ptuser()  # 获取token
+                        return True
+                logging.debug(f"OCR识别原始结果: {result.stdout}")
             except Exception as e:
                 logging.error(f"登录过程中出现错误: {e}")
 

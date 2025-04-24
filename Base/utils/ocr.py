@@ -5,6 +5,7 @@ import logging
 from pathlib import Path
 
 
+
 class BaiduOCR:
     def __init__(self, api_key, secret_key):
         self.api_key = api_key
@@ -104,18 +105,27 @@ class BaiduOCR:
 
 def load_config():
     try:
-        sys.path.append(str(Path(__file__).parent.parent))
-        from config.config import API_KEY, SECRET_KEY
+        project_root = Path(__file__).resolve().parent.parent.parent
+        sys.path.insert(0, str(project_root))
+        
+        # 保留动态导入（第114行）
+        from Base.config import API_KEY, SECRET_KEY
         return API_KEY, SECRET_KEY
-    except ImportError:
-        logging.error("无法导入 API_KEY 和 SECRET_KEY，请检查配置文件。")
+    except ImportError as e:
+        logging.error(f"配置导入失败，请检查：{project_root}/Base/config.py 是否存在且包含API_KEY/SECRET_KEY")
+        logging.error(f"完整错误信息：{str(e)}")
         sys.exit(1)
 
 
 if __name__ == "__main__":
     api_key, secret_key = load_config()
     ocr_client = BaiduOCR(api_key, secret_key)
-
+    
+    # 注释测试模式
+    # if len(sys.argv) > 1 and sys.argv[1] == "--test":
+    #     print("\n正在执行OCR功能测试...")
+    #     test_result = ocr_client.test_ocr_functionality()
+    #     sys.exit(0 if test_result else 1)
     if len(sys.argv) > 1:
         image_path = sys.argv[1]
         result = ocr_client.ocr_accurate_basic(image_path)
