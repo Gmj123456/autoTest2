@@ -13,6 +13,9 @@ LOGIN_SUCCESS_URL = "http://124.222.178.125:3006/dashboard/analysis"
 USERNAME = "guomj"  # 主测试账号
 PASSWORD = "gmj123.."
 
+PTUSER_NAME = "ptuser"  # 特殊账号
+PTUSER_PASSWORD = "que123"
+
 # ocr识别
 API_KEY = '5mPZWWtbEIcYzeFKmhpQ0Cat'
 SECRET_KEY = 'GBd6NyH5oBqXzrZfkyAsKSChKlZEMMTk'
