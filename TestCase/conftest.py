@@ -247,10 +247,6 @@ def menu_urls(ptuser_driver_and_logged_in):
 
 """
 测试账号登录，返回登录后的驱动实例
-
-此 fixture 用于创建一个 Chrome 浏览器实例，使用测试账号登录，并返回登录后的驱动实例。
-每个测试函数执行前都会重新创建浏览器实例并登录。
-
 :return: 登录后的浏览器驱动实例
 """
 @pytest.fixture(scope="function")
